@@ -12,14 +12,6 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-      colors: {
-        navbar: "#66a066",
-        navbar2: "#8da587",
-        authForms: "#80b0ca",
-      },
-      fontFamily: {
-        righteous: ["var(--font-righteous)"],
-      },
     },
   },
   plugins: [],

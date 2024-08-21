@@ -1,21 +1,10 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import dbConnection from "@/app/lib/database/dbconnection";
-import { ObjectId } from "mongodb";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import client from "@/app/lib/database/db";
-import authConfig from "@/auth.config";
 
 export const BASE_PATH = "/api/auth";
 
 const authOptions = {
-  adapter: MongoDBAdapter(client, {
-    databaseName: "myFirstDatabase",
-  }),
-  session: { strategy: "jwt" },
-  ...authConfig,
-
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -34,9 +23,6 @@ const authOptions = {
       async authorize(credentials) {
         let user = null;
         console.log("credentials", credentials);
-        // const dbClient = await dbConnection();
-        // const db = await dbClient.db(process.env.DB_NAME);
-        user = await authOptions.adapter.getUserByEmail(credentials.email);
 
         if (user) {
           console.log("user found", user);
@@ -51,20 +37,6 @@ const authOptions = {
   ],
   basePath: BASE_PATH,
   secret: process.env.NEXTAUTH_SECRET,
-  callbacks: {
-    async jwt({ token, user }) {
-      // Add user properties to the token
-      if (user) {
-        token.userType = user.userType; // Assuming userType is a property of the user object
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      // Add token properties to the session
-      session.user.userType = token.userType;
-      return session;
-    },
-  },
 
   // callbacks: {
   //   async session(session, user) {
